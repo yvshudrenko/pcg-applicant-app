@@ -11,12 +11,24 @@
         <div class="input_area">
           <v-textarea label="Storie" auto-grow variant="solo"></v-textarea>
         </div>
-        <v-btn class="m8">Posten</v-btn>
+        <v-btn :color="'blue'" class="m8">Posten</v-btn>
       </div>
-      <v-col cols="10">
-        Content
-        <BlogEntry image-url="https://cdn.vuetifyjs.com/images/parallax/material.jpg"/>
-      </v-col>
+      <div class="content">
+        <v-toolbar :color="'#4c70a2'">
+          <v-text-field
+            clearable
+            hide-details
+            prepend-inner-icon="mdi-magnify"
+            label="Enter to search.."
+            variant="solo"
+            single-line
+          ></v-text-field>
+        </v-toolbar>
+        <v-col cols="10">
+          Content
+          <BlogEntry image-url="https://cdn.vuetifyjs.com/images/parallax/material.jpg"/>
+        </v-col>
+      </div>
     </div>
 </template>
 
@@ -28,16 +40,20 @@
   background-color: hsl(250,100%,99%);
 }
 .sidebar {
-  flex:1;
-  width:70rem;
+  width:280px;
   flex-direction: column;
-  background-color: #fff;
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.19);
+  background-color: #aff;
+  box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.19);
   display: flex;
+  position: relative;
+}
+.content{
+  flex: 1;
+  position: relative;
 }
 .input_area{
   min-height:80px;
-  margin:8px;
+  margin:22px 8px 8px;
   position: relative;
 }
 .bar_title {
