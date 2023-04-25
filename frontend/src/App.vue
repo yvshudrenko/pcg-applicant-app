@@ -6,6 +6,7 @@
         </v-toolbar>
         <div class="sidebar_content">
           <v-text-field
+            v-model="titleField"
             clearable
             hide-details
             label="Enter title.."
@@ -13,7 +14,12 @@
             single-line
             density="compact"
           ></v-text-field>
-          <v-textarea label="Storie" auto-grow variant="solo"></v-textarea>
+          <v-textarea 
+            v-model="storyField"
+            label="Storie" 
+            auto-grow 
+            variant="solo"
+          ></v-textarea>
           <v-row>
             <v-col>
             <v-file-input
@@ -64,7 +70,9 @@
   const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.description.includes(searchField.value)));
 
   const searchField = ref(''); 
-
+  const titleField = ref(''); 
+  const storyField = ref(''); 
+  const imageField = ref(''); 
   // Task
   // function isFiltered(blog: any) {
   //   return !searchField.value.length || blog.description.includes(searchField.value);
@@ -73,7 +81,16 @@
   const blogEntries = reactive([1, 2, 3, 4, 5, 6].map(i => structuredClone({...blogExample, description: blogExample.description + ' ' + i})));
   
   const uploadEvent = ()=>{
-    blogEntries.push(structuredClone({...blogExample, description: blogExample.description + ' ' + (blogEntries.length+1)}));
+    if(titleField.value.trim().length == 0) {
+      alert('Title too short')
+      return;
+    }
+    if(storyField.value.trim().length == 0) {
+      alert('Story too short')
+      return;
+    }
+    console.log(imageField.value)
+    blogEntries.push(structuredClone({...blogExample, title:titleField.value,  description: storyField.value + ' ' + (blogEntries.length+1)}));
   }
 </script>
 
