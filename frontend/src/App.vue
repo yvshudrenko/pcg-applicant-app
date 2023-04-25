@@ -4,10 +4,30 @@
         <v-toolbar :color="'#4c70a2'">
           <h2 class="bar_title">Beitrag posten</h2>
         </v-toolbar>
-        <div class="input_area">
+        <div class="sidebar_content">
+          <v-text-field
+            v-model="searchField"
+            clearable
+            hide-details
+            label="Enter title.."
+            variant="solo"
+            single-line
+            density="compact"
+          ></v-text-field>
           <v-textarea label="Storie" auto-grow variant="solo"></v-textarea>
+          <v-row>
+            <v-col>
+            <v-file-input
+              label="Upload image"
+              chips
+              variant="solo"
+              prepend-inner-icon="mdi-camera"
+              density="compact"
+            ></v-file-input>
+          </v-col>
+          </v-row>
+          <v-btn :color="'blue'">Posten</v-btn>
         </div>
-        <v-btn :color="'blue'" class="m8">Posten</v-btn>
       </div>
       <div class="content">
         <v-toolbar :color="'#4c70a2'">
@@ -71,12 +91,18 @@
   display: flex;
   position: relative;
 }
+.sidebar_content{
+  flex-direction: column;
+  display: flex;
+  padding: 12px;
+  gap: 8px;
+}
 .content{
   flex: 1;
   position: relative;
 }
 .input_area{
-  min-height:80px;
+  flex:1;
   margin:22px 8px 8px;
   position: relative;
 }
