@@ -20,17 +20,13 @@
             single-line
           ></v-text-field>
         </v-toolbar>
-        <v-col cols="10">
-          Content
-          <BlogEntry image-url="https://cdn.vuetifyjs.com/images/parallax/material.jpg"/>
-        </v-col>
+        <v-row class="pa-10">
+            <v-col v-for="blog in blogEntries" cols=3 class="m-0">
+              <BlogEntry :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
+            </v-col>
+        </v-row>
       </div>
 
-      <v-row class="pa-10">
-          <v-col v-for="blog in blogEntries" cols=3 class="m-0">
-            <BlogEntry :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
-          </v-col>
-      </v-row>
   
     </div>
 </template>
