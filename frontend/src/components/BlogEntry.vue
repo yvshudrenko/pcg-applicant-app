@@ -2,17 +2,22 @@
 import { ref } from 'vue'
 
 defineProps({
-  msg: String,
+  msg: String
 })
 
-const count = ref(0)
+const count = ref(0);
 </script>
 
 <template>
-    <v-container class="pt-0">
+    <v-container fluid>
         <v-row>
           <v-col>
-            picture here
+            <v-img
+              :width="300"
+              aspect-ratio="16/9"
+              cover
+              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+            ></v-img>
             <v-text-field
                 label="Altes Passwort"
             ></v-text-field>

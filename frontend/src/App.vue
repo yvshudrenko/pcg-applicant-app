@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+  import BlogEntry from './components/BlogEntry.vue';
 </script>
 
 <template>
@@ -86,7 +86,7 @@
       </v-container>
     </v-main> -->
 
-    <!-- <v-container>
+    <v-container fluid>
       <v-row>
         <v-col cols="2" class="border">Sidebar</v-col>
         <v-col cols="10">
@@ -94,21 +94,23 @@
           <BlogEntry />
         </v-col>
       </v-row>
-    </v-container> -->
+    </v-container>
 
-    <v-card>
+    <!-- <v-card>
       <v-layout>
         <v-navigation-drawer>
           <v-list>
             <v-list-item title="Navigation drawer"></v-list-item>
           </v-list>
-        </v-navigation-drawer>
+        </v-navigation-drawer> -->
 
-        <v-app-bar title="Application bar"></v-app-bar>
+        <!-- <v-app-bar>
+          Content
+        </v-app-bar> -->
 
-        <v-main style="min-height: 300px;"></v-main>
+        <!-- <v-main>Cont</v-main>
       </v-layout>
-    </v-card>
+    </v-card> -->
   
 </template>
 
