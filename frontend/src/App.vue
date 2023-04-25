@@ -7,7 +7,7 @@
       <div class="sidebar">Sidebar</div>
       <v-col cols="10">
         Content
-        <BlogEntry />
+        <BlogEntry image-url="https://cdn.vuetifyjs.com/images/parallax/material.jpg"/>
       </v-col>
     </div>
 </template>

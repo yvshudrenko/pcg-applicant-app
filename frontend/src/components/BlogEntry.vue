@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-defineProps({
-  msg: String
+const props = defineProps({
+  description: String,
+  imageUrl: String
 })
 
-const count = ref(0);
 </script>
 
 <template>
@@ -16,16 +16,12 @@ const count = ref(0);
               :width="300"
               aspect-ratio="16/9"
               cover
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+              :src=imageUrl
             ></v-img>
-            <v-text-field
-                label="Altes Passwort"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            text here
+            <!-- <div class="mt-2">{{ description }}</div> -->
+            <div class="mt-2">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
           </v-col>
         </v-row>
     </v-container>
