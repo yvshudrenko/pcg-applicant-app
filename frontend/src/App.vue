@@ -48,7 +48,7 @@
         </v-toolbar>
         <v-row class="pa-10">
             <v-col v-for="blog in blogEntriesFiltered" cols=3 class="m-0">
-              <BlogEntry :description="blog.description" :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
+              <BlogEntry :title="blog.title" :description="blog.description" :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
             </v-col>
         </v-row>
       </div>
