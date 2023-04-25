@@ -12,6 +12,7 @@
       <div class="content">
         <v-toolbar :color="'#4c70a2'">
           <v-text-field
+            v-model="searchField"
             clearable
             hide-details
             prepend-inner-icon="mdi-magnify"
@@ -21,8 +22,8 @@
           ></v-text-field>
         </v-toolbar>
         <v-row class="pa-10">
-            <v-col v-for="blog in blogEntries" cols=3 class="m-0">
-              <BlogEntry :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
+            <v-col v-for="blog in blogEntriesFiltered" cols=3 class="m-0">
+              <BlogEntry :description="blog.description" :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
             </v-col>
         </v-row>
       </div>
@@ -33,17 +34,25 @@
 
 <script setup lang="ts">
   import BlogEntry from './components/BlogEntry.vue';
-  import { reactive, toRaw } from 'vue';
+  import { ref, reactive, computed } from 'vue';
   
   const blogExample = reactive(
     {
-      description: "blabla",
+      description: 'blablabla',
+      // description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       imageUrl: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
       isLiked: false
     }
   );
 
-  const blogEntries = reactive([1, 2, 3, 4, 5, 6].map(_ => structuredClone(toRaw(blogExample))));
+  const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.description.includes(searchField.value)));
+
+  const searchField = ref(''); 
+  // function isFiltered(blog: any) {
+  //   return !searchField.value.length || blog.description.includes(searchField.value);
+  // }
+
+  const blogEntries = reactive([1, 2, 3, 4, 5, 6].map(i => structuredClone({...blogExample, description: blogExample.description + ' ' + i})));
   
 </script>
 
