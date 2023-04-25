@@ -1,17 +1,4 @@
-<script setup>
-import BlogEntry from './components/BlogEntry.vue';
-import HelloWorld from './components/HelloWorld.vue'
-
-import { ref, reactive } from 'vue'
-
-const drawer = ref('');
-const cards = reactive(['Today', 'Yesterday']);
-const links = reactive([
-        ['mdi-inbox-arrow-down', 'Inbox'],
-        ['mdi-send', 'Send'],
-        ['mdi-delete', 'Trash'],
-        ['mdi-alert-octagon', 'Spam'],
-      ]);
+<script setup lang="ts">
 
 </script>
 
