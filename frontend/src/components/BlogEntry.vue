@@ -11,7 +11,17 @@ const count = ref(0)
 <template>
     <v-container class="pt-0">
         <v-row>
-          <v-col>PCG app</v-col>
+          <v-col>
+            picture here
+            <v-text-field
+                label="Altes Passwort"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            text here
+          </v-col>
         </v-row>
     </v-container>
 </template>
