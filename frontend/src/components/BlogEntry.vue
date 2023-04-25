@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 
 const props = defineProps({
   description: String,
@@ -14,14 +13,14 @@ const props = defineProps({
         <v-row>
           <v-col>
             <v-img
-              :width="300"
               aspect-ratio="16/9"
               cover
               :src=imageUrl
             ></v-img>
             <div class="mt-2 d-inline-flex justify-end border w-100">
-              <v-icon icon="mdi-heart" v-if="isLiked"></v-icon>
-              <v-icon icon="mdi-heart-outline" v-else></v-icon>
+
+              <v-icon icon="mdi-heart clickable" v-if="isLiked" @click="$emit('triggerLike')"></v-icon>
+              <v-icon icon="mdi-heart-outline clickable" v-else @click="$emit('triggerLike')"></v-icon>
             </div>
             <!-- <div class="mt-2">{{ description }}</div> -->
             <div class="mt-2">

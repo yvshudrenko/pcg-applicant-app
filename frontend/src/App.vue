@@ -1,7 +1,3 @@
-<script setup lang="ts">
-  import BlogEntry from './components/BlogEntry.vue';
-</script>
-
 <template>
     <div class="layout">
       <div class="sidebar">
@@ -13,14 +9,31 @@
         </div>
         <v-btn class="m8">Posten</v-btn>
       </div>
-      <v-col cols="3"></v-col>
-      <v-col cols="4">
-        Content
-        <BlogEntry image-url="https://cdn.vuetifyjs.com/images/parallax/material.jpg"/>
-      </v-col>
-      <v-col cols="3"></v-col>
+
+      <v-row class="pa-10">
+          <v-col v-for="blog in blogEntries" cols=3 class="m-0">
+            <BlogEntry :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
+          </v-col>
+      </v-row>
+  
     </div>
 </template>
+
+<script setup lang="ts">
+  import BlogEntry from './components/BlogEntry.vue';
+  import { reactive, toRaw } from 'vue';
+  
+  const blogExample = reactive(
+    {
+      description: "blabla",
+      imageUrl: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
+      isLiked: false
+    }
+  );
+
+  const blogEntries = reactive([1, 2, 3, 4, 5, 6].map(_ => structuredClone(toRaw(blogExample))));
+  
+</script>
 
 <style scoped>
 .layout {
