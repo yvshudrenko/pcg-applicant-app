@@ -9,7 +9,52 @@ const props = defineProps({
 </script>
 
 <template>
-    <v-container fluid>
+
+
+
+  <v-card
+      class="mx-auto"
+      max-width="450"
+    >
+    <v-img
+      :src="imageUrl"
+      cover
+      :aspect-ratio="16/9"
+    >
+    </v-img>
+    <v-card-title class="flex-column align-start">
+      <div class="text-h4 mb-2">
+        title
+      </div>
+      <div class="text-h6 font-weight-regular text-grey">
+        {{ description }}
+      </div>
+      <div class="d-flex align-center">
+        <!-- Task -->
+        <!-- <v-avatar
+          size="24"
+          class="me-4"
+        >
+          <v-img
+            :src="imageUrl"
+            contain
+          ></v-img>
+        </v-avatar> -->
+
+        <!-- <span class="text-body-2 text-grey">81° / 62°</span> -->
+      </div>
+    </v-card-title>
+
+    <v-divider class="mx-4"></v-divider>
+
+    <v-card-text class="d-flex justify-space-between">
+      <v-icon icon="mdi-heart clickable" v-if="isLiked" @click="$emit('triggerLike')"></v-icon>
+      <v-icon icon="mdi-heart-outline clickable" v-else @click="$emit('triggerLike')"></v-icon>
+    </v-card-text>
+  </v-card>
+
+
+    <!-- <v-container fluid>
         <v-row>
           <v-col>
             <v-img
@@ -22,12 +67,11 @@ const props = defineProps({
               <v-icon icon="mdi-heart-outline clickable" v-else @click="$emit('triggerLike')"></v-icon>
             </div>
             <div class="mt-2">{{ description }}</div>
-            <!-- <div class="mt-2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </div> -->
           </v-col>
         </v-row>
-    </v-container>
+    </v-container> -->
+
+
 </template>
 
 <style scoped>
