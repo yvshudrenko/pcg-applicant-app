@@ -6,7 +6,6 @@
         </v-toolbar>
         <div class="sidebar_content">
           <v-text-field
-            v-model="searchField"
             clearable
             hide-details
             label="Enter title.."
@@ -26,7 +25,7 @@
             ></v-file-input>
           </v-col>
           </v-row>
-          <v-btn :color="'blue'">Posten</v-btn>
+          <v-btn @click="uploadEvent" :color="'blue'">Posten</v-btn>
         </div>
       </div>
       <div class="content">
@@ -62,7 +61,6 @@
       isLiked: false
     }
   );
-
   const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.description.includes(searchField.value)));
 
   const searchField = ref(''); 
@@ -74,6 +72,9 @@
 
   const blogEntries = reactive([1, 2, 3, 4, 5, 6].map(i => structuredClone({...blogExample, description: blogExample.description + ' ' + i})));
   
+  const uploadEvent = ()=>{
+    blogEntries.push(structuredClone({...blogExample, description: blogExample.description + ' ' + (blogEntries.length+1)}));
+  }
 </script>
 
 <style scoped>
