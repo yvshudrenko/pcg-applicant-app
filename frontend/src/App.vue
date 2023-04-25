@@ -13,10 +13,12 @@
         </div>
         <v-btn class="m8">Posten</v-btn>
       </div>
-      <v-col cols="10">
+      <v-col cols="3"></v-col>
+      <v-col cols="4">
         Content
         <BlogEntry image-url="https://cdn.vuetifyjs.com/images/parallax/material.jpg"/>
       </v-col>
+      <v-col cols="3"></v-col>
     </div>
 </template>
 
