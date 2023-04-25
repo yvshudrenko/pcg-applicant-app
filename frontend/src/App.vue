@@ -4,10 +4,35 @@
         <v-toolbar :color="'#4c70a2'">
           <h2 class="bar_title">Beitrag posten</h2>
         </v-toolbar>
-        <div class="input_area">
-          <v-textarea label="Storie" auto-grow variant="solo"></v-textarea>
+        <div class="sidebar_content">
+          <v-text-field
+            v-model="titleField"
+            clearable
+            hide-details
+            label="Enter title.."
+            variant="solo"
+            single-line
+            density="compact"
+          ></v-text-field>
+          <v-textarea 
+            v-model="storyField"
+            label="Storie" 
+            auto-grow 
+            variant="solo"
+          ></v-textarea>
+          <v-row>
+            <v-col>
+            <v-file-input
+              label="Upload image"
+              chips
+              variant="solo"
+              prepend-inner-icon="mdi-camera"
+              density="compact"
+            ></v-file-input>
+          </v-col>
+          </v-row>
+          <v-btn @click="uploadEvent" :color="'blue'">Posten</v-btn>
         </div>
-        <v-btn :color="'blue'" class="m8">Posten</v-btn>
       </div>
       <div class="content">
         <v-toolbar :color="'#4c70a2'">
@@ -42,14 +67,15 @@
       isLiked: false
     }
   );
-
   const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.description.includes(searchField.value)));
 
   onMounted( async () => {
     await getJoke();
   });
   const searchField = ref(''); 
-
+  const titleField = ref(''); 
+  const storyField = ref(''); 
+  const imageField = ref(''); 
   // Task
   // function isFiltered(blog: any) {
   //   return !searchField.value.length || blog.description.includes(searchField.value);
@@ -65,6 +91,18 @@
   }
 
   
+  const uploadEvent = ()=>{
+    if(titleField.value.trim().length == 0) {
+      alert('Title too short')
+      return;
+    }
+    if(storyField.value.trim().length == 0) {
+      alert('Story too short')
+      return;
+    }
+    console.log(imageField.value)
+    blogEntries.push(structuredClone({...blogExample, title:titleField.value,  description: storyField.value + ' ' + (blogEntries.length+1)}));
+  }
 </script>
 
 <style scoped>
@@ -82,12 +120,18 @@
   display: flex;
   position: relative;
 }
+.sidebar_content{
+  flex-direction: column;
+  display: flex;
+  padding: 12px;
+  gap: 8px;
+}
 .content{
   flex: 1;
   position: relative;
 }
 .input_area{
-  min-height:80px;
+  flex:1;
   margin:22px 8px 8px;
   position: relative;
 }
