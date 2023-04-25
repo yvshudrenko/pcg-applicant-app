@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
   import BlogEntry from './components/BlogEntry.vue';
-  import { ref, reactive, computed } from 'vue';
+  import { ref, reactive, computed, onMounted } from 'vue';
   
   const blogExample = reactive(
     {
@@ -45,6 +45,9 @@
 
   const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.description.includes(searchField.value)));
 
+  onMounted( async () => {
+    await getJoke();
+  });
   const searchField = ref(''); 
 
   // Task
@@ -52,7 +55,15 @@
   //   return !searchField.value.length || blog.description.includes(searchField.value);
   // }
 
-  const blogEntries = reactive([1, 2, 3, 4, 5, 6].map(i => structuredClone({...blogExample, description: blogExample.description + ' ' + i})));
+  const blogEntries = reactive([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(i => structuredClone({...blogExample, description: blogExample.description + ' ' + i})));
+  
+  const jokeUrl = "https://official-joke-api.appspot.com/random_joke";
+  async function getJoke() {
+    const response = await fetch(jokeUrl);
+    const data = await response.json();
+    console.log(`jokes: `, data);
+  }
+
   
 </script>
 

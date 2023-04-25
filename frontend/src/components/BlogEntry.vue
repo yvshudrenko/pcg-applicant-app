@@ -3,14 +3,13 @@
 const props = defineProps({
   description: String,
   imageUrl: String,
-  isLiked: Boolean
+  isLiked: Boolean,
+  title: String
 })
 
 </script>
 
 <template>
-
-
 
   <v-card
       class="mx-auto"
@@ -24,7 +23,7 @@ const props = defineProps({
     </v-img>
     <v-card-title class="flex-column align-start">
       <div class="text-h4 mb-2">
-        title
+         {{ title }}
       </div>
       <div class="text-h6 font-weight-regular text-grey">
         {{ description }}
@@ -52,25 +51,6 @@ const props = defineProps({
       <v-icon icon="mdi-heart-outline clickable" v-else @click="$emit('triggerLike')"></v-icon>
     </v-card-text>
   </v-card>
-
-
-    <!-- <v-container fluid>
-        <v-row>
-          <v-col>
-            <v-img
-              aspect-ratio="16/9"
-              cover
-              :src=imageUrl
-            ></v-img>
-            <div class="mt-2 d-inline-flex justify-end border w-100">
-              <v-icon icon="mdi-heart clickable" v-if="isLiked" @click="$emit('triggerLike')"></v-icon>
-              <v-icon icon="mdi-heart-outline clickable" v-else @click="$emit('triggerLike')"></v-icon>
-            </div>
-            <div class="mt-2">{{ description }}</div>
-          </v-col>
-        </v-row>
-    </v-container> -->
-
 
 </template>
 
