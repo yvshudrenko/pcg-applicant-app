@@ -57,13 +57,8 @@
       title: 'Dolor',
       content: 'blablabla',
       isLiked: false,
-<<<<<<< HEAD
-      createdAt: new Date().getTime(),
-      pictures: []
-=======
       pictures: [],
       createdAt: new Date().getTime()
->>>>>>> master
     }
   );
 
