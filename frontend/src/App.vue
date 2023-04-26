@@ -35,6 +35,7 @@
         </div>
       </div>
       <div class="content">
+        <div class="toolbar_header">
         <v-toolbar :color="'#4c70a2'">
           <v-text-field
             v-model="searchField"
@@ -47,11 +48,14 @@
             single-line
           ></v-text-field>
           </v-toolbar>
-        <v-row class="pa-10">
+        </div>
+        <div class="scrollview">
+          <v-row class="pa-10">
             <v-col v-for="blog in blogEntriesFiltered" :key="blog.id" cols=3 class="m-0">
               <BlogEntry :blog="blog" @triggerLike="blog.isLiked = !blog.isLiked" @deletePost="deletePost"/>
             </v-col>
-        </v-row>
+          </v-row>
+        </div>
       </div>
     </div>
 </template>
@@ -157,8 +161,13 @@
   padding: 12px;
   gap: 8px;
 }
+.toolbar_header{
+  height:64px;
+}
 .content{
   flex: 1;
+  flex-direction: column;
+  display: flex;
   position: relative;
 }
 .input_area{
@@ -177,6 +186,12 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
+}
+.scrollview {
+  flex:1;
+  max-height: calc(100vh - 64px);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .m8 {
   margin:8px;
