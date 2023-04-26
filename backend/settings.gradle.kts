@@ -4,4 +4,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = "publicchatgroup-backend"
+rootProject.name = "public-chat-group-backend"
