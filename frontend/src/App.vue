@@ -14,7 +14,7 @@
             single-line
             density="compact"
           ></v-text-field>
-          <v-textarea 
+          <v-textarea
             v-model="storyField"
             label="Story" 
             auto-grow 
@@ -46,10 +46,10 @@
             variant="solo"
             single-line
           ></v-text-field>
-        </v-toolbar>
+          </v-toolbar>
         <v-row class="pa-10">
-            <v-col v-for="blog in blogEntriesFiltered" cols=3 class="m-0">
-              <BlogEntry :title="blog.title" :description="blog.description" :image-url="blog.imageUrl" :is-liked="blog.isLiked" @triggerLike="blog.isLiked = !blog.isLiked"/>
+            <v-col v-for="blog in blogEntriesFiltered" :key="blog.id" cols=3 class="m-0">
+              <BlogEntry :blog="blog" @triggerLike="blog.isLiked = !blog.isLiked" @deletePost="deletePost"/>
             </v-col>
         </v-row>
       </div>
@@ -60,38 +60,67 @@
   import BlogEntry from './components/BlogEntry.vue';
   import { ref, reactive, computed, onMounted } from 'vue';
   
-  const blogExample = reactive(
-    {
-      title: 'Dolor',
-      description: 'blablabla',
-      imageUrl: "https://cdn.vuetifyjs.com/images/parallax/material.jpg",
-      isLiked: false
-    }
-  );
-  const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.description.includes(searchField.value)));
+  type Blog = {
+    id: number;
+    title: string;
+    content: string;
+    isLiked: boolean;
+    pictures: any[];
+  };
 
-  onMounted( async () => {
-    await getJoke();
-  });
   const searchField = ref(''); 
   const titleField = ref(''); 
   const storyField = ref(''); 
   const imageField = ref(''); 
+  const baseUrl = "http://192.168.1.35:8080";
+  
+  const blogEntries: Blog[] = reactive([]);
+  const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.content.includes(searchField.value)));
+  const blogExample: Blog = reactive(
+    {
+      id: 0,
+      title: 'Dolor',
+      content: 'blablabla',
+      isLiked: false,
+      pictures: []
+    }
+  );
+
+  function initDummyBlogList()
+  {
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].forEach(i => blogEntries.push( structuredClone({...blogExample, content: blogExample.content + ' ' + i, id: i}) ))
+  }
+
+  onMounted( async () => {
+    let resp: any[] = await getMessages();
+
+    if (!resp.length)
+    {
+      initDummyBlogList();
+      console.log(`initialized dummy blog list: `, blogEntries);
+    }
+    else
+    {
+      resp.forEach( (it, index) => blogEntries.push( {...it, content: it.content + ' ' + index, title: 'Sample message #' + index, isLiked: false} ));
+      console.log(`initialized blog list from backend data: `, blogEntries);
+    }
+
+  });
+
   // Task
   // function isFiltered(blog: any) {
   //   return !searchField.value.length || blog.description.includes(searchField.value);
   // }
 
-  const blogEntries = reactive([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map(i => structuredClone({...blogExample, description: blogExample.description + ' ' + i})));
-  
-  const jokeUrl = "https://official-joke-api.appspot.com/random_joke";
-  async function getJoke() {
-    const response = await fetch(jokeUrl);
-    const data = await response.json();
-    console.log(`jokes: `, data);
+  async function getMessages() {
+    const response = await fetch(baseUrl + '/messages');
+    return await response.json();
   }
 
-  
+  function deletePost(_: any, blogId: Number) {
+    blogEntries.splice(blogEntries.findIndex((blog: Blog) => blog.id === blogId), 1);
+  }
+
   const uploadEvent = ()=>{
     if(titleField.value.trim().length == 0) {
       alert('Title too short')

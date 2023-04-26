@@ -1,10 +1,7 @@
 <script setup lang="ts">
 
 const props = defineProps({
-  description: String,
-  imageUrl: String,
-  isLiked: Boolean,
-  title: String
+  blog: Object
 })
 
 </script>
@@ -16,17 +13,17 @@ const props = defineProps({
       max-width="450"
     >
     <v-img
-      :src="imageUrl"
+      :src="blog?.pictures[0]?.content || 'https://cdn.vuetifyjs.com/images/parallax/material.jpg'"
       cover
       :aspect-ratio="16/9"
     >
     </v-img>
     <v-card-title class="flex-column align-start">
       <div class="text-h4 mb-2">
-         {{ title }}
+         {{ blog.title }}
       </div>
       <div class="text-h6 font-weight-regular text-grey">
-        {{ description }}
+        {{ blog.content }}
       </div>
       <div class="d-flex align-center">
         <!-- Task -->
@@ -47,10 +44,10 @@ const props = defineProps({
     <v-divider class="mx-4"></v-divider>
 
     <v-card-text class="d-flex">
-      <v-icon icon="mdi-heart" v-if="isLiked" @click="$emit('triggerLike')"></v-icon>
+      <v-icon icon="mdi-heart" v-if="blog.isLiked" @click="$emit('triggerLike')"></v-icon>
       <v-icon icon="mdi-heart-outline" v-else @click="$emit('triggerLike')"></v-icon>
       <v-icon icon="mdi-checkerboard" class="ml-2"  @click="$emit('turnGrayscale')"></v-icon>
-      <v-icon icon="mdi-delete" class="ml-auto"  @click="$emit('deletePost')"></v-icon>
+      <v-icon icon="mdi-delete" class="ml-auto"  @click="$emit('deletePost', $event, blog.id)"></v-icon>
     </v-card-text>
   </v-card>
 
