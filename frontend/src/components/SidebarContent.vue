@@ -36,7 +36,7 @@ const uploadEvent = async () => {
 
 
     let body = {
-        "content": "egal",
+        "content": titleField.value,
         "pictures": [
             {
                 "content": base64enc,
