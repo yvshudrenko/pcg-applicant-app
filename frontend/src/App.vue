@@ -4,36 +4,7 @@
         <v-toolbar :color="'#4c70a2'">
           <h2 class="bar_title">Public Chat Group</h2>
         </v-toolbar>
-        <div class="sidebar_content">
-          <v-text-field
-            v-model="titleField"
-            clearable
-            hide-details
-            label="Enter title.."
-            variant="solo"
-            single-line
-            density="compact"
-          ></v-text-field>
-          <v-textarea
-            v-model="storyField"
-            label="Story" 
-            auto-grow 
-            variant="solo"
-          ></v-textarea>
-          <v-row>
-            <v-col>
-            <v-file-input
-              v-model="imageField"
-              label="Upload image"
-              chips
-              variant="solo"
-              prepend-inner-icon="mdi-camera"
-              density="compact"
-            ></v-file-input>
-          </v-col>
-          </v-row>
-          <v-btn @click="uploadEvent" :color="'blue'">Post</v-btn>
-        </div>
+        <SidebarContent :baseUrl="baseUrl" :onPost="initDataFromBackend"/>
       </div>
       <div class="content">
         <div class="toolbar_header">
@@ -63,6 +34,7 @@
 
 <script setup lang="ts">
   import BlogEntry from './components/BlogEntry.vue';
+  import SidebarContent from './components/SidebarContent.vue';
   import { ref, reactive, computed, onMounted } from 'vue';
   
   export type Blog = {
@@ -74,9 +46,6 @@
   };
 
   const searchField = ref(''); 
-  const titleField = ref(''); 
-  const storyField = ref(''); 
-  const imageField = ref('');
   const baseUrl = "http://192.168.1.35:8080";
 
   const blogEntries: Blog[] = reactive([]);
@@ -97,19 +66,7 @@
   }
 
   onMounted( async () => {
-    let resp: any[] = await getMessages();
-
-    if (!resp.length)
-    {
-      initDummyBlogList();
-      console.log(`initialized dummy blog list: `, blogEntries);
-    }
-    else
-    {
-      resp.forEach( (it, index) => blogEntries.push( {...it, content: it.content + ' ' + index, title: 'Sample message #' + index, isLiked: false} ));
-      console.log(`initialized blog list from backend data: `, blogEntries);
-    }
-
+    await initDataFromBackend()
   });
 
   // Task
@@ -121,61 +78,23 @@
     const response = await fetch(baseUrl + '/messages');
     return await response.json();
   }
+  async function initDataFromBackend(){
+    let resp: any[] = await getMessages();
 
+    if (!resp.length)
+    {
+      initDummyBlogList();
+      console.log(`initialized dummy blog list: `, blogEntries);
+    }
+    else
+    {
+      blogEntries.splice(0,blogEntries.length);
+      resp.forEach( (it, index) => blogEntries.push( {...it, content: it.content + ' ' + index, title: 'Sample message #' + index, isLiked: false} ));
+      console.log(`initialized blog list from backend data: `, blogEntries);
+    }
+  }
   function deletePost(_: any, blogId: Number) {
     blogEntries.splice(blogEntries.findIndex((blog: Blog) => blog.id === blogId), 1);
-  }
-
-  async function getBase64(file: any) {
-
-    var reader = new FileReader();
-
-    return new Promise( (resolve, rej) => {
-      reader.onloadend = function () {
-        resolve(reader.result);
-      }
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const uploadEvent = async () => {
-    if(titleField.value.trim().length == 0) {
-      alert('Title too short')
-      return;
-    }
-    if(storyField.value.trim().length == 0) {
-      alert('Story too short')
-      return;
-    }
-    console.log('image field: ', imageField.value[0])
-
-    let base64enc = await getBase64(imageField.value[0]);
-
-
-    let body = {
-      "content": "egal",
-      "pictures": [
-        {
-          "content": base64enc,
-          "name": imageField.value[0].name
-        }
-      ]
-    }
-
-    console.log(`body: `, body);
-
-    const response = await fetch(baseUrl + "/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-
-    console.log(`uploaded image resp: `, response);
-
-    // blogEntries.push({...blogExample, title: titleField.value,  content: storyField.value + ' ' + (blogEntries.length+1)}); 
-    // blogEntries.push(structuredClone({...blogExample, title: titleField.value,  content: storyField.value + ' ' + (blogEntries.length+1)})); Exercise 
   }
 </script>
 
