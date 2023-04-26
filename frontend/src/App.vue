@@ -57,7 +57,8 @@
       title: 'Dolor',
       content: 'blablabla',
       isLiked: false,
-      pictures: []
+      pictures: [],
+      createdAt: new Date().getTime()
     }
   );
 
