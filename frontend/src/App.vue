@@ -23,6 +23,7 @@
           <v-row>
             <v-col>
             <v-file-input
+              v-model="imageField"
               label="Upload image"
               chips
               variant="solo"
@@ -75,9 +76,9 @@
   const searchField = ref(''); 
   const titleField = ref(''); 
   const storyField = ref(''); 
-  const imageField = ref(''); 
+  const imageField = ref('');
   const baseUrl = "http://192.168.1.35:8080";
-  
+
   const blogEntries: Blog[] = reactive([]);
   const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.content.includes(searchField.value)));
   const blogExample: Blog = reactive(
@@ -125,7 +126,19 @@
     blogEntries.splice(blogEntries.findIndex((blog: Blog) => blog.id === blogId), 1);
   }
 
-  const uploadEvent = ()=>{
+  async function getBase64(file: any) {
+
+    var reader = new FileReader();
+
+    return new Promise( (resolve, rej) => {
+      reader.onloadend = function () {
+        resolve(reader.result);
+      }
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const uploadEvent = async () => {
     if(titleField.value.trim().length == 0) {
       alert('Title too short')
       return;
@@ -134,8 +147,34 @@
       alert('Story too short')
       return;
     }
-    console.log(imageField.value)
-    blogEntries.push({...blogExample, title: titleField.value,  content: storyField.value + ' ' + (blogEntries.length+1)}); 
+    console.log('image field: ', imageField.value[0])
+
+    let base64enc = await getBase64(imageField.value[0]);
+
+
+    let body = {
+      "content": "egal",
+      "pictures": [
+        {
+          "content": base64enc,
+          "name": imageField.value[0].name
+        }
+      ]
+    }
+
+    console.log(`body: `, body);
+
+    const response = await fetch(baseUrl + "/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    console.log(`uploaded image resp: `, response);
+
+    // blogEntries.push({...blogExample, title: titleField.value,  content: storyField.value + ' ' + (blogEntries.length+1)}); 
     // blogEntries.push(structuredClone({...blogExample, title: titleField.value,  content: storyField.value + ' ' + (blogEntries.length+1)})); Exercise 
   }
 </script>
