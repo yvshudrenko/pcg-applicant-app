@@ -46,9 +46,11 @@ const props = defineProps({
 
     <v-divider class="mx-4"></v-divider>
 
-    <v-card-text class="d-flex justify-space-between">
-      <v-icon icon="mdi-heart clickable" v-if="isLiked" @click="$emit('triggerLike')"></v-icon>
-      <v-icon icon="mdi-heart-outline clickable" v-else @click="$emit('triggerLike')"></v-icon>
+    <v-card-text class="d-flex">
+      <v-icon icon="mdi-heart" v-if="isLiked" @click="$emit('triggerLike')"></v-icon>
+      <v-icon icon="mdi-heart-outline" v-else @click="$emit('triggerLike')"></v-icon>
+      <v-icon icon="mdi-checkerboard" class="ml-2"  @click="$emit('turnGrayscale')"></v-icon>
+      <v-icon icon="mdi-delete" class="ml-auto"  @click="$emit('deletePost')"></v-icon>
     </v-card-text>
   </v-card>
 

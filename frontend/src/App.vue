@@ -2,7 +2,7 @@
     <div class="layout">
       <div class="sidebar">
         <v-toolbar :color="'#4c70a2'">
-          <h2 class="bar_title">Beitrag posten</h2>
+          <h2 class="bar_title">Public Chat Group</h2>
         </v-toolbar>
         <div class="sidebar_content">
           <v-text-field
@@ -16,7 +16,7 @@
           ></v-text-field>
           <v-textarea 
             v-model="storyField"
-            label="Storie" 
+            label="Story" 
             auto-grow 
             variant="solo"
           ></v-textarea>
@@ -31,13 +31,14 @@
             ></v-file-input>
           </v-col>
           </v-row>
-          <v-btn @click="uploadEvent" :color="'blue'">Posten</v-btn>
+          <v-btn @click="uploadEvent" :color="'blue'">Post</v-btn>
         </div>
       </div>
       <div class="content">
         <v-toolbar :color="'#4c70a2'">
           <v-text-field
             v-model="searchField"
+            class="ma-5"
             clearable
             hide-details
             prepend-inner-icon="mdi-magnify"
