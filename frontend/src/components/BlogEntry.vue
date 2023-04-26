@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
-const props = defineProps({
-  blog: Object
-})
+import { Blog } from '../types/Blog'
+
+defineProps<{
+  blog: Blog
+}>();
 
 </script>
 

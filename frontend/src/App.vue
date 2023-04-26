@@ -60,7 +60,7 @@
   import BlogEntry from './components/BlogEntry.vue';
   import { ref, reactive, computed, onMounted } from 'vue';
   
-  type Blog = {
+  export type Blog = {
     id: number;
     title: string;
     content: string;
@@ -131,7 +131,8 @@
       return;
     }
     console.log(imageField.value)
-    blogEntries.push(structuredClone({...blogExample, title:titleField.value,  description: storyField.value + ' ' + (blogEntries.length+1)}));
+    blogEntries.push({...blogExample, title: titleField.value,  content: storyField.value + ' ' + (blogEntries.length+1)}); 
+    // blogEntries.push(structuredClone({...blogExample, title: titleField.value,  content: storyField.value + ' ' + (blogEntries.length+1)})); Exercise 
   }
 </script>
 
