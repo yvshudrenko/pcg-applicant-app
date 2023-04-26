@@ -1,0 +1,22 @@
+FROM amazoncorretto:20-alpine-jdk as build
+
+COPY gradle /src/gradle
+COPY gradlew /src/gradlew
+COPY build.gradle.kts /src/build.gradle.kts
+COPY settings.gradle.kts /src/settings.gradle.kts
+COPY gradlew /src/gradlew
+COPY src /src/src
+
+WORKDIR /src
+
+RUN ./gradlew bootJar --no-daemon -Dorg.gradle.daemon.performance.enable-monitoring=false
+
+FROM amazoncorretto:20-alpine
+
+COPY --from=build /src/build/libs/public-chat-group-backend-0.0.1-SNAPSHOT.jar /app/app.jar
+
+WORKDIR /app
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

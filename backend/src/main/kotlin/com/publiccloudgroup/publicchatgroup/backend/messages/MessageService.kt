@@ -3,12 +3,16 @@ package com.publiccloudgroup.publicchatgroup.backend.messages
 import com.publiccloudgroup.publicchatgroup.backend.messages.db.repositories.MessageRepository
 import com.publiccloudgroup.publicchatgroup.backend.messages.dto.Message
 import com.publiccloudgroup.publicchatgroup.backend.pictures.db.PictureService
+import com.publiccloudgroup.publicchatgroup.backend.pictures.dto.Picture
 import kotlinx.coroutines.*
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrElse
 import kotlinx.coroutines.reactive.awaitLast
+import kotlinx.coroutines.reactor.mono
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
+import reactor.kotlin.core.publisher.toFlux
+import reactor.kotlin.core.publisher.toMono
 import java.util.*
 import com.publiccloudgroup.publicchatgroup.backend.messages.db.model.Message as DbMessage
 import com.publiccloudgroup.publicchatgroup.backend.messages.dto.Message as MessageDto
@@ -21,7 +25,7 @@ class MessageService(
 
     suspend fun getMessage(id: UUID): MessageDto {
         return messageRepository.findById(id)
-            .map { MessageDto(it.content, it.id, listOf()) }
+            .map { MessageDto(it.content, it.id, listOf(), it.createdAt) }
             .awaitFirstOrElse { throw NoSuchElementException("No message $id") }
             .let { loadPicturesOf(it) }
     }
@@ -33,35 +37,34 @@ class MessageService(
             MessageDto(
                 message.content,
                 message.id,
-                pictures
+                pictures.toList(),
+                message.createdAt
             )
         } else {
             message
         }
     }
 
-    private inline fun <T, R> Flux<T>.map2(crossinline mapFunction: (T) -> R) = map {
-        mapFunction(it)
-    }
-
-    private inline fun <T> Flux<T>.tap(crossinline tapFunction: (T) -> Unit) = map2 {
-        tapFunction(it)
-        it
-    }
-
     suspend fun getAll(): Iterable<MessageDto> = coroutineScope {
         messageRepository.findAll()
-            .doOnEach { if (it.hasValue()) println(it.get()!!) }
-            .map2 { MessageDto(it.content, it.id, listOf()) }
-            .map2 { async { loadPicturesOf(it) } }
+            .map { MessageDto(it.content, it.id, listOf(), it.createdAt) }
+            .flatMap { mono { loadPicturesOf(it) } }
             .buffer()
             .defaultIfEmpty(listOf())
             .awaitFirst()
-            .awaitAll()
     }
 
-    suspend fun addMessage(message: MessageDto): MessageDto {
-        val dbMessage = messageRepository.save(DbMessage(null, message.content)).awaitLast()
-        return loadPicturesOf(MessageDto(dbMessage.content, dbMessage.id, listOf()))
+    suspend fun addMessage(message: MessageDto): MessageDto = coroutineScope {
+
+        val nowInUnixTimeSeconds = (System.currentTimeMillis() / 1000).toInt()
+        val dbMessage = messageRepository.save(DbMessage(null, message.content, nowInUnixTimeSeconds)).awaitFirst()
+
+        val pictures = Flux.fromIterable(message.pictures ?: listOf())
+            .flatMap { mono { picturesService.saveImage(it, dbMessage.id!!)} }
+            .buffer()
+            .awaitLast()
+
+        MessageDto(dbMessage.content, dbMessage.id, pictures, dbMessage.createdAt)
+
     }
 }

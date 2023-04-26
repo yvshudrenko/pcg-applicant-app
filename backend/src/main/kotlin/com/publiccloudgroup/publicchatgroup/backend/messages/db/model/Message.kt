@@ -11,5 +11,7 @@ data class Message(
     @Column("ID")
     public var id: UUID?,
     @Column("CONTENT")
-    public var content: String
+    public var content: String,
+    @Column("CREATED_AT")
+    public var createdAt: Int
 )

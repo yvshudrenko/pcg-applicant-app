@@ -6,5 +6,6 @@ import java.util.UUID
 data class Message(
     var content: String,
     var id: UUID?,
-    var pictures: Iterable<Picture>?
+    var pictures: List<Picture>?,
+    var createdAt: Int?
 )
