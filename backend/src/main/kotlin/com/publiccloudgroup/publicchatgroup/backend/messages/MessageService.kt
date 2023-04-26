@@ -59,23 +59,12 @@ class MessageService(
         val nowInUnixTimeSeconds = (System.currentTimeMillis() / 1000).toInt()
         val dbMessage = messageRepository.save(DbMessage(null, message.content, nowInUnixTimeSeconds)).awaitFirst()
 
-        /*
         val pictures = Flux.fromIterable(message.pictures ?: listOf())
-            .flatMap { mono { picturesService.saveImage(it, dbMessage.id!!) } }
-            .buffer()
-            .awaitLast()
-        */
-
-
-
-        val xxx = Flux.fromIterable(message.pictures ?: listOf())
             .flatMap { mono { picturesService.saveImage(it, dbMessage.id!!)} }
             .buffer()
             .awaitLast()
 
-        val pictures = listOf<Picture>()
-
-        loadPicturesOf(MessageDto(dbMessage.content, dbMessage.id, pictures, dbMessage.createdAt))
+        MessageDto(dbMessage.content, dbMessage.id, pictures, dbMessage.createdAt)
 
     }
 }
