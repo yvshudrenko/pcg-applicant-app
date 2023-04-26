@@ -46,6 +46,15 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
+graalvmNative {
+	binaries {
+		getByName("main") {
+			buildArgs.add("--static")
+			buildArgs.add("--libc=musl")
+		}
+	}
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
 }

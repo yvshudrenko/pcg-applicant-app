@@ -3,20 +3,21 @@ package com.publiccloudgroup.publicchatgroup.backend.pictures.db
 import com.publiccloudgroup.publicchatgroup.backend.pictures.db.repositories.PictureRepository
 import com.publiccloudgroup.publicchatgroup.backend.pictures.dto.Picture
 import io.r2dbc.spi.Blob
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactor.mono
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toFlux
 import reactor.kotlin.core.publisher.toMono
-import java.awt.Image
+import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.net.URLDecoder
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.util.*
 import javax.imageio.ImageIO
+import javax.swing.GrayFilter
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.roundToInt
@@ -59,13 +60,12 @@ class PictureService(
         ImageIO.read(ByteArrayInputStream(decodedContent))
     }
 
-    fun Image.toBlob() = Blob.from(ByteBuffer.wrap(ImageIO.createImageOutputStream(this)
-        .readUTF()
-        .toByteArray(Charsets.UTF_8)).toMono())
+    fun BufferedImage.toByteBuffer() = ByteArrayOutputStream().let {
+        ImageIO.write(this, "png", it)
+        ByteBuffer.wrap(it.toByteArray())!!
+    }
 
-    suspend fun getPicture(id: UUID): Picture = this.pictureRepository.findById(id)
-        .flatMap { it.content.toDataUrl("image/png").map { url -> Picture(it.id, url, it.name) }.toMono() }
-        .awaitFirst()
+    fun ByteBuffer.toBlob() = Blob.from(this.toMono())
 
     suspend fun getPicturesForMessage(messageId: UUID): Iterable<Picture> = this.pictureRepository.findAllByMessageId(messageId)
         .flatMap { it.content.toDataUrl("image/png").map { url -> Picture(it.id, url, it.name) }.toMono() }
@@ -74,26 +74,31 @@ class PictureService(
         .awaitFirst()
 
     suspend fun saveImage(picture: Picture, messageId: UUID): Picture {
-        val image = picture.content.dataUrlToImage()
+        val imageData = picture.content.dataUrlToImage()
             .grayscale()
-            .toBlob()
-        return pictureRepository.save(DbPicture(null, image, picture.name, messageId))
-            .flatMap { it.content.toDataUrl("image/png").map { url -> Picture(it.id, url, it.name) }.toMono() }
+            .toByteBuffer()
+
+        return pictureRepository.save(DbPicture(null, imageData.toBlob(), picture.name, messageId))
+            .flatMap { imageData.toBlob().toDataUrl("image/png").map { url -> Picture(it.id, url, it.name) }.toMono() }
             .awaitFirst()
     }
 
 }
 
-private fun BufferedImage.grayscale(): Image {
-    for (x in 0 until width)
-        for (y in 0 until height) {
-            val rgb = getRGB(x, y)
-            val a = rgb shr 24 and 0xFF
-            val r = rgb shr 16 and 0xFF
-            val g = rgb shr 8 and 0xFF
-            val b = rgb and 0xFF
-            val brightness = (255 - (r.toDouble() * redWeight + g.toDouble() * greenWeight + b.toDouble() * blueWeight)).roundToInt()
-            setRGB(x, y, a shl 24 + (brightness shl 16) + (brightness shl 8) + brightness)
-        }
-    return this
-}
+private fun BufferedImage.grayscale(): BufferedImage {
+    val result = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+     for (x in 0 until width)
+         for (y in 0 until height) {
+             val rgb = getRGB(x, y)
+             val color = Color(rgb)
+
+             val r = color.red
+             val g = color.green
+             val b = color.blue
+             val brightness = (r.toDouble() * redWeight + g.toDouble() * greenWeight + b.toDouble() * blueWeight).roundToInt()
+             val grayColor = Color(brightness, brightness, brightness)
+             result.setRGB(x, y, grayColor.rgb)
+         }
+     return result
+ }
+
