@@ -30,22 +30,22 @@ const uploadEvent = async () => {
         alert('Story too short')
         return;
     }
-    console.log('image field: ', imageField.value[0])
-
-    let base64enc = await getBase64(imageField.value[0]);
-
 
     let body = {
-        "content": titleField.value,
-        "pictures": [
+            "content": titleField.value,
+            "pictures": []
+        }
+
+    if (imageField?.value) {
+        let base64enc = await getBase64(imageField.value[0]);
+
+        body.pictures.push(
             {
                 "content": base64enc,
-                "name": imageField.value[0].name
+                "name": imageField?.value[0].name
             }
-        ]
+        )
     }
-
-    console.log(`body: `, body);
 
     const response = await fetch(baseUrl + "/messages", {
         method: "POST",
