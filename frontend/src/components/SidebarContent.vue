@@ -10,7 +10,7 @@ const titleField = ref('');
 const storyField = ref('');
 const imageField = ref();
 
-async function getBase64(file: any) {
+async function getBase64(file: any): Promise<string | ArrayBuffer | null> {
 
     var reader = new FileReader();
 
@@ -31,9 +31,13 @@ const uploadEvent = async () => {
         return;
     }
 
+    type PictureObject = {
+        name: string;
+        content: string;
+    }
     let body = {
             "content": titleField.value,
-            "pictures": []
+            "pictures": [] as PictureObject[]
         }
 
     if (imageField?.value) {
@@ -41,12 +45,11 @@ const uploadEvent = async () => {
 
         body.pictures.push(
             {
-                "content": base64enc,
+                "content": typeof base64enc === 'string' ? base64enc : '',
                 "name": imageField?.value[0].name
             }
         )
     }
-
     const response = await fetch(baseUrl + "/messages", {
         method: "POST",
         headers: {
