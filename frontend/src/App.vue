@@ -57,6 +57,7 @@
       title: 'Dolor',
       content: 'blablabla',
       isLiked: false,
+      createdAt: new Date().getTime(),
       pictures: []
     }
   );
@@ -156,9 +157,7 @@
 }
 .scrollview {
   flex:1;
-  max-height: calc(100vh - 64px);
   overflow-x: hidden;
-  overflow-y: auto;
 }
 .m8 {
   margin:8px;
