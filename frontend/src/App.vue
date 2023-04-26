@@ -17,6 +17,7 @@
             prepend-inner-icon="mdi-magnify"
             label="Enter to search.."
             variant="solo"
+            disabled
             single-line
           ></v-text-field>
           </v-toolbar>
