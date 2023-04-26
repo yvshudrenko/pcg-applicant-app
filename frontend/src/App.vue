@@ -39,6 +39,7 @@
   
   export type Blog = {
     id: number;
+    createdAt: number;
     title: string;
     content: string;
     isLiked: boolean;
@@ -89,7 +90,15 @@
     else
     {
       blogEntries.splice(0,blogEntries.length);
+
       resp.forEach( (it, index) => blogEntries.push( {...it, content: it.content + ' ' + index, title: 'Sample message #' + index, isLiked: false} ));
+      
+      blogEntries.sort(function(a, b) {
+        if (a.createdAt < b.createdAt) return -1;
+        if (a.createdAt > b.createdAt) return 1;
+        return 0;
+      });
+    
       console.log(`initialized blog list from backend data: `, blogEntries);
     }
   }
