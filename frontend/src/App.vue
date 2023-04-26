@@ -1,14 +1,14 @@
 <template>
     <div class="layout">
       <div class="sidebar">
-        <v-toolbar :color="'#4c70a2'">
+        <v-toolbar :color="'#1f274b'">
           <h2 class="bar_title">Public Chat Group</h2>
         </v-toolbar>
         <SidebarContent :baseUrl="baseUrl" :onPost="initDataFromBackend"/>
       </div>
       <div class="content">
         <div class="toolbar_header">
-        <v-toolbar :color="'#4c70a2'">
+        <v-toolbar :color="'#1f274b'">
           <v-text-field
             v-model="searchField"
             class="ma-5"
