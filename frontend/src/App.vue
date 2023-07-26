@@ -48,7 +48,7 @@
   };
 
   const searchField = ref(''); 
-  const baseUrl = "http://192.168.1.35:8080";
+  const baseUrl = "http://localhost:8080";
 
   const blogEntries: Blog[] = reactive([]);
   const blogEntriesFiltered = computed( () => blogEntries.filter(b => !searchField.value.length || b.content.includes(searchField.value)));
